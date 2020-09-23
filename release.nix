@@ -9,7 +9,6 @@ rec {
     extraCommands = ''
       mkdir -m 1777 tmp
     '';
-    config = {
-    };
+    config = {};
   };
 }
