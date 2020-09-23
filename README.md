@@ -1,29 +1,84 @@
-# zacc
+# TypeScript-Demo-SPA
 
-## Project setup
+[![pipeline status](https://gitlab.com/MatrixAI/open-source/TypeScript-Demo-Spa/badges/master/pipeline.svg)](https://gitlab.com/MatrixAI/open-source/TypeScript-Demo-Spa/commits/master)
+
+## Installation
+
+Note that JavaScript libraries are not packaged in Nix. Only JavaScript applications are.
+
+Building the package:
+
+```sh
+nix-build -E '(import ./pkgs.nix).callPackage ./default.nix {}'
 ```
+
+Building the releases:
+
+```sh
+nix-build ./release.nix --attr application
+nix-build ./release.nix --attr docker
+```
+
+Install into Nix user profile:
+
+```sh
+nix-env -f ./release.nix --install --attr application
+```
+
+Install into Docker:
+
+```sh
+docker load --input "$(nix-build ./release.nix --attr docker)"
+```
+
+## Development
+
+Run `nix-shell`, and once you're inside, you can use:
+
+```sh
+# install (or reinstall packages from package.json)
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
+# build the dist
 npm run build
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
+# run the repl (this allows you to import from ./src)
+npm run ts-node
+# run the tests
+npm run test
+# lint the source code
 npm run lint
+# automatically fix the source
+npm run lintfix
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Path Aliases
+
+Due to https://github.com/microsoft/TypeScript/issues/10866, you cannot use path aliases without a bundler like Webpack to further transform the generated JavaScript code in order to resolve the path aliases. Because this is a simple library demonstrate, there's no need to use a bundler. In fact, for such libraries, it is far more efficient to not bundle the code.
+
+However we have left the path alias configuration in `tsconfig.json`, `jest.config.json` and in the tests we are making use of the `@typescript-demo-lib` alias.
+
+### Docs Generation
+
+Remember to create `gh-pages` as an orphan branch first: `git checkout --orphan gh-pages`.
+
+```sh
+typedoc --mode modules --out /tmp/docs src
+git checkout gh-pages
+find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -r "{}" \;
+mv /tmp/docs/* .;
+touch .nojekyll
+git commit -am "Updated Docs";
+git push
+```
+
+See the docs at: https://matrixai.github.io/TypeScript-Demo-Lib/
+
+### Publishing
+
+```sh
+# npm login
+npm version patch # major/minor/patch
+npm run build
+npm publish --access public
+git push
+git push --tags
+```
