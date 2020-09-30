@@ -38,7 +38,11 @@ Run `nix-shell`, and once you're inside, you can use:
 ```sh
 # install (or reinstall packages from package.json)
 npm install
-# build the dist
+# run the webpack development server
+npm run server
+# build the webpack and after the initial build, watch for changes in any resolved files
+npm run watch
+# build webpack dist
 npm run build
 # run the repl (this allows you to import from ./src)
 npm run ts-node
