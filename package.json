@@ -42,6 +42,7 @@
     "vue": "^3.0.0",
     "vue-jest": "^5.0.0-alpha.4",
     "vue-loader": "^16.0.0-beta.5",
+    "vuex": "^4.0.0-beta.4",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"

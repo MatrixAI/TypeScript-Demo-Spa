@@ -1,34 +1,40 @@
 <template>
-  <div class=sansserif>
+  <div class=root>
     <h1>Welcome to Typescript-Demo-Spa</h1>
-    <button @click="increase(1)">Clicked {{ count }} times.</button>
+    <button @click="increment(1)">Clicked {{ count }} times.</button>
+    <div>
+      <MyComponent />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import MyComponent from '@typescript-demo-spa/components/MyComponent.vue'
 
 export default defineComponent({
-  data() {
-    return {
-      count: 0
-    }
+  components: {
+    MyComponent
   },
+  setup(props, context) {
+    const count = ref(0)
 
-  methods: {
-    increase(increment: number) {
-      this.count += increment;
+    const increment = (amount: number) => {
+      count.value += amount
+    }
+
+    return {
+      count,
+      increment
     }
   }
 });
 </script>
 
 <style scoped>
-div {
+.root {
+  font-family: "Lucida Console", Courier, monospace;
   font-size: 2em;
   text-align: center;
-}
-.sansserif {
-  font-family: "Lucida Console", Courier, monospace;
 }
 </style>
