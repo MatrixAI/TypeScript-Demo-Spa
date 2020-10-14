@@ -1,6 +1,7 @@
+.env*
+!.env.example
 /.vscode
 /dist
-/.env
 /result
 /result-*
 
