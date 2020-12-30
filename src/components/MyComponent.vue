@@ -1,42 +1,68 @@
 <template>
   <div class=data-style>
-    {{ myData }}
-    <div>
-      <input v-model="inputData" />
-      <button @click="setData">Set Data</button>
-    </div>
+    <div v-if="!dataPage || dataPage.type === 'Progress'">Loading...</div>
+    <ul v-if="dataPage && dataPage.type === 'Success' && show">
+      <li v-for="data in dataPage.data" :key=data>
+        <DataThing :dataId=data />
+      </li>
+    </ul>
+    <button @click="test">
+      test
+    </button>
+    <button @click="toggle">
+      toggle
+    </button>
+
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue'
-import { useStore } from '@typescript-demo-spa/store'
-import { MutationTypes } from '@typescript-demo-spa/store/mutation-types'
-import { ActionTypes } from '@typescript-demo-spa/store/action-types'
+import { defineComponent, ref, computed, onMounted } from 'vue'
+import { useStore } from 'vuex';
+import { actions as actionsData } from '@typescript-demo-spa/store/data';
+import DataThing from './DataThing.vue';
 
 export default defineComponent({
   name: 'MyComponent',
-  props: {
-    myProp: {
-      type: String,
-      required: true
-    }
+  components: {
+    DataThing,
   },
   setup(props, context) {
     const store = useStore()
+    const state = store.state
 
-    const myData = computed(() => store.getters.data)
-    const inputData = ref("")
+    const limit = 10;
+    const pageId = "MyComponent"
 
-    const setData = async () => {
-      await store.dispatch(ActionTypes.SET_DATA, {data: inputData.value})
-      inputData.value = ""
+    onMounted(async () => {
+      await store.dispatch(
+        actionsData.FetchDatasPage,
+        {
+          pageId: pageId,
+          limit: limit
+        }
+      )
+    })
+
+    const dataPage = computed(() => {
+      return state.data.dataPages[pageId]
+    })
+
+    const test = () => {
+      console.log(state.gcModule.gcStore)
+    }
+
+    const show = ref(true)
+
+    const toggle = () => {
+      show.value = !show.value
     }
 
     return {
-      myData,
-      setData,
-      inputData
+      dataPage,
+      test,
+      toggle,
+      show
     }
   }
 
