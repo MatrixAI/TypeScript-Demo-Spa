@@ -28,11 +28,8 @@ export default defineComponent({
     onMounted(() => {
       store.dispatch(
         gc.Increment, {
-          gcIndex: {
-            module: "data",
-            state: "datas",
-            identifiers: [dataId]
-          }
+          gcIndex: { module: "data", state: "datas", identifiers: [dataId] },
+          delete: () => { state.data.datas[dataId] = null }
         }
       )
     })
@@ -40,11 +37,7 @@ export default defineComponent({
     onUnmounted(() => {
       store.dispatch(
         gc.Decrement, {
-          gcIndex: {
-            module: "data",
-            state: "datas",
-            identifiers: [dataId]
-          }
+          gcIndex: { module: "data", state: "datas", identifiers: [dataId]}
         }
       )
     })

@@ -3,12 +3,35 @@
 {nodeEnv, fetchurl, fetchgit, globalBuildInputs ? []}:
 
 let
-  sources = {};
+  sources = {
+    "@types/object-hash-1.3.4" = {
+      name = "_at_types_slash_object-hash";
+      packageName = "@types/object-hash";
+      version = "1.3.4";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/@types/object-hash/-/object-hash-1.3.4.tgz";
+        sha512 = "xFdpkAkikBgqBdG9vIlsqffDV8GpvnPEzs0IUtr1v3BEB97ijsFQ4RXVbUZwjFThhB4MDSTUfvmxUD5PGx0wXA==";
+      };
+    };
+    "object-hash-2.1.1" = {
+      name = "object-hash";
+      packageName = "object-hash";
+      version = "2.1.1";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/object-hash/-/object-hash-2.1.1.tgz";
+        sha512 = "VOJmgmS+7wvXf8CjbQmimtCnEx3IAoLxI3fp2fbWehxrWBcAQFbk+vcwb6vzR0VZv/eNCJ/27j151ZTwqW/JeQ==";
+      };
+    };
+  };
   args = {
     name = "_at_matrixai_slash_typescript-demo-spa";
     packageName = "@matrixai/typescript-demo-spa";
     version = "0.1.0";
     src = ./..;
+    dependencies = [
+      sources."@types/object-hash-1.3.4"
+      sources."object-hash-2.1.1"
+    ];
     buildInputs = globalBuildInputs;
     meta = {
       description = "TypeScript Demo SPA Project";

@@ -11,12 +11,14 @@ type GCStore = {[key: string]: GCCount};
 
 const [actionsInt, actionsExt] = makeIdentifiers('gcModule', [
   'Increment',
-  'Decrement'
+  'Decrement',
+  'Wipe'
 ]);
 
 enum mutations {
   GCIncrement = 'GCIncrement',
   GCDecrement = 'GCDecrement',
+  GCClear = 'GCClear',
 }
 
 type State = {
@@ -32,29 +34,44 @@ const gcModule = {
   state: state,
   actions: {
     async [actionsInt.Increment] (
-      { commit },
-      payload: { gcIndex: GCIndex }
+      { commit, state },
+      payload: {
+        gcIndex: GCIndex;
+        delete: () => void;
+      }
     ) {
-      commit(mutations.GCIncrement, { gcIndex: payload.gcIndex });
+      commit(mutations.GCIncrement, { gcIndex: payload.gcIndex, delete: payload.delete });
     },
     async [actionsInt.Decrement] (
-      { commit },
-      payload: { gcIndex: GCIndex }
+      { commit, state },
+      payload: {
+        gcIndex: GCIndex,
+        delete: () => void
+      }
     ) {
-      commit(mutations.GCDecrement, { gcIndex: payload.gcIndex });
+      commit(mutations.GCDecrement, { gcIndex: payload.gcIndex, delete: payload.delete });
+    },
+    async [actionsInt.Wipe] (
+      { commit, state }
+    ) {
+      Object.keys(state.gcStore).forEach(key => {
+        if (state.gcStore[key].references <= 0) {
+          commit(mutations.GCClear, key)
+        }
+      })
     }
   },
   mutations: {
     // datas collection
     [mutations.GCIncrement] (
       state: State,
-      payload: { gcIndex: GCIndex }
+      payload: { gcIndex: GCIndex, delete: () => void }
     ) {
       const index = hash(payload.gcIndex)
       if (!state.gcStore[index]) {
         state.gcStore[index] = {
           references: 1,
-          delete: () => 5
+          delete: payload.delete
         }
       } else {
         const previous = state.gcStore[index].references;
@@ -67,13 +84,13 @@ const gcModule = {
     },
     [mutations.GCDecrement] (
       state: State,
-      payload: { gcIndex: GCIndex }
+      payload: { gcIndex: GCIndex, delete: () => void }
     ) {
       const index = hash(payload.gcIndex)
-      if (!state.gcStore[index]) {
+      if (!state.gcStore[index] || state.gcStore[index].references < 0) {
         state.gcStore[index] = {
           references: 0,
-          delete: () => 5
+          delete: payload.delete
         }
       } else {
         const previous = state.gcStore[index].references;
@@ -84,6 +101,12 @@ const gcModule = {
         }
       };
     },
+    [mutations.GCClear] (
+      state: State,
+      gcHash: string
+    ) {
+      state.gcStore[gcHash].delete()
+    }
   }
 };
 

@@ -12,6 +12,9 @@
     <button @click="toggle">
       toggle
     </button>
+    <button @click="wipe">
+      wipe
+    </button>
 
   </div>
 </template>
@@ -20,6 +23,7 @@
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex';
 import { actions as actionsData } from '@typescript-demo-spa/store/data';
+import { actions as gc } from '@typescript-demo-spa/store/gc';
 import DataThing from './DataThing.vue';
 
 export default defineComponent({
@@ -58,11 +62,16 @@ export default defineComponent({
       show.value = !show.value
     }
 
+    const wipe = async () => {
+      await store.dispatch(gc.Wipe)
+    }
+
     return {
       dataPage,
       test,
       toggle,
-      show
+      show,
+      wipe
     }
   }
 
