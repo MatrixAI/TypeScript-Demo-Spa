@@ -8,6 +8,7 @@ import { makeIdentifiers } from '@typescript-demo-spa/store/utils';
 import hash from 'object-hash';
 
 type GCStore = {[key: string]: GCCount};
+type GCPages = {[key: string]: [() => void]};
 
 const [actionsInt, actionsExt] = makeIdentifiers('gcModule', [
   'Increment',
@@ -28,6 +29,8 @@ type State = {
 const state: State = {
   gcStore: {},
 };
+
+const gcPages: GCPages = {};
 
 const gcModule = {
   namespaced: true,
@@ -116,4 +119,4 @@ export type {
 
 export default gcModule;
 
-export { actionsExt as actions };
+export { actionsExt as actions, gcPages };

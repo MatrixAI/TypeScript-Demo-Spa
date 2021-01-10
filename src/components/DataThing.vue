@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, computed, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
-import { actions as actionsData } from '@typescript-demo-spa/store/data';
+import { actions as actionsData, getters as gettersData } from '@typescript-demo-spa/store/data';
 import { actions as gc } from '@typescript-demo-spa/store/gc';
 
 export default defineComponent({
@@ -21,8 +21,11 @@ export default defineComponent({
     const store = useStore()
     const state = store.state
 
+    console.log(store.getters[gettersData.getDatas](dataId))
+    // console.log(gettersData.getDatas)
+
     const data = computed(() => {
-      return state.data.datas[dataId]
+      return store.getters[gettersData.getDatas](dataId)
     })
 
     onMounted(() => {

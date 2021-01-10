@@ -22,7 +22,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue'
 import { useStore } from 'vuex';
-import { actions as actionsData } from '@typescript-demo-spa/store/data';
+import { actions as actionsData, getters as gettersData } from '@typescript-demo-spa/store/data';
 import { actions as gc } from '@typescript-demo-spa/store/gc';
 import DataThing from './DataThing.vue';
 
@@ -49,7 +49,7 @@ export default defineComponent({
     })
 
     const dataPage = computed(() => {
-      return state.data.dataPages[pageId]
+      return store.getters[gettersData.getDataPages](pageId)
     })
 
     const test = () => {
