@@ -10,7 +10,8 @@ import type {
 } from '@typescript-demo-spa/types';
 
 import * as resourceData from '@typescript-demo-spa/resources/data';
-import { makeIdentifiers } from '@typescript-demo-spa/store/utils';
+import { makeIdentifiers, delay } from '@typescript-demo-spa/store/utils';
+import { gcPages } from '@typescript-demo-spa/store/gc';
 import hash from 'object-hash';
 
 type Datas = {[key: number]: ManagedResource<Async<Readonly<Data>>>};
@@ -49,14 +50,29 @@ const datasModule = {
   namespaced: true,
   state: state,
   getters: {
-    [gettersInt.getDataPages]: (state: State) => (pageId: PageId) => {
-      console.log("Do stuff")
-      // register decrement function
-      return state.dataPages[pageId]?.resource
+    [gettersInt.getDataPages]: (state: State) => ({pageId, cId}: {pageId: PageId, cId: string}) => {
+      if (state.dataPages[pageId] == null) return;
+      if (!gcPages[cId]) {
+        gcPages[cId] = [() => { state.dataPages[pageId].refs -= 1 } ]
+      } else {
+        gcPages[cId].push(() => { state.dataPages[pageId].refs -= 1} )
+      }
+      state.dataPages[pageId].refs += 1;
+      return state.dataPages[pageId].resource
     },
-    [gettersInt.getDatas]: (state: State) => (dataId: DataId) => {
-      console.log("do stuff", dataId)
-      return state.datas[dataId]?.resource
+    [gettersInt.getDatas]: (state: State) => ({dataId, cId}: {dataId: DataId, cId: string}) => {
+      console.log(dataId)
+      if (!state.datas[dataId]) return;
+      if (!gcPages[cId]) {
+        gcPages[cId] = [() => {
+          state.datas[dataId].refs -= 1
+          console.log("dataId:", dataId)
+        } ]
+      } else {
+        gcPages[cId].push(() => { state.datas[dataId].refs -= 1} )
+      }
+      state.datas[dataId].refs += 1
+      return state.datas[dataId].resource
     }
   },
   actions: {
@@ -86,6 +102,7 @@ const datasModule = {
       for (let i = 1; i < payload.limit; i++) {
         page.push(i)
       }
+      await delay(500);
       const datas: Array<Data> = await resourceData.getDatas(payload.limit)
       for (let data of datas) {
         commit(mutations.DataFetchSuccess, {
@@ -97,7 +114,6 @@ const datasModule = {
         pageId: payload.pageId,
         data: page,
       })
-      console.log("sdf", page)
     }
   },
   mutations: {
@@ -126,7 +142,6 @@ const datasModule = {
           state.datas[payload.id].resource = null;
         }
       }
-      console.log(state.datas[payload.id])
     },
     [mutations.DataFetchFail] (
       state: State,
@@ -176,7 +191,6 @@ const datasModule = {
         data: Array<DataId>;
       }
     ) {
-      console.log("poapp", payload.data)
       state.dataPages[payload.pageId] = {
         resource: { type: 'Success', data: payload.data },
         refs: state.dataPages[payload.pageId]?.refs != null ? state.dataPages[payload.pageId].refs : 0,
@@ -184,7 +198,6 @@ const datasModule = {
           state.datas[payload.pageId].resource = null;
         }
       }
-      console.log(state.dataPages[payload.pageId].resource)
     }
   }
 };

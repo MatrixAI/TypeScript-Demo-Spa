@@ -6,7 +6,7 @@
 import { defineComponent, onMounted, computed, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 import { actions as actionsData, getters as gettersData } from '@typescript-demo-spa/store/data';
-import { actions as gc } from '@typescript-demo-spa/store/gc';
+import { actions as gc, cleanup } from '@typescript-demo-spa/store/gc';
 
 export default defineComponent({
   name: "DataThing",
@@ -17,32 +17,33 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const cId = "aaaa";
     const dataId = props.dataId;
     const store = useStore()
     const state = store.state
 
-    console.log(store.getters[gettersData.getDatas](dataId))
     // console.log(gettersData.getDatas)
 
     const data = computed(() => {
-      return store.getters[gettersData.getDatas](dataId)
+      return store.getters[gettersData.getDatas]({dataId, cId})
     })
 
     onMounted(() => {
-      store.dispatch(
-        gc.Increment, {
-          gcIndex: { module: "data", state: "datas", identifiers: [dataId] },
-          delete: () => { state.data.datas[dataId] = null }
-        }
-      )
+      // store.dispatch(
+      //   gc.Increment, {
+      //     gcIndex: { module: "data", state: "datas", identifiers: [dataId] },
+      //     delete: () => { state.data.datas[dataId] = null }
+      //   }
+      // )
     })
 
     onUnmounted(() => {
-      store.dispatch(
-        gc.Decrement, {
-          gcIndex: { module: "data", state: "datas", identifiers: [dataId]}
-        }
-      )
+      cleanup(cId)
+      // store.dispatch(
+      //   gc.Decrement, {
+      //     gcIndex: { module: "data", state: "datas", identifiers: [dataId]}
+      //   }
+      // )
     })
 
     return {

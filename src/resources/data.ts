@@ -5,10 +5,11 @@ type Data = {
 };
 
 async function getData (dataId: DataId): Promise<Data> {
-  const resource = new URL(`google.com/pipelines/${dataId}`);
+  const resource = new URL(`https://www.google.com/}`);
   let response;
   try {
-    // response = await fetch(resource.toString());
+    response = await fetch(resource.toString());
+    console.log("ff", response)
     response = {
       data: {stuff: `${dataId}: Data From External Resource`}
     };

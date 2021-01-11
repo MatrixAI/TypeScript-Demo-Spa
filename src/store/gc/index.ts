@@ -4,7 +4,7 @@ import type {
 } from '@typescript-demo-spa/resources/gc';
 
 import * as resourceData from '@typescript-demo-spa/resources/data';
-import { makeIdentifiers } from '@typescript-demo-spa/store/utils';
+import { makeIdentifiers, delay } from '@typescript-demo-spa/store/utils';
 import hash from 'object-hash';
 
 type GCStore = {[key: string]: GCCount};
@@ -13,13 +13,12 @@ type GCPages = {[key: string]: [() => void]};
 const [actionsInt, actionsExt] = makeIdentifiers('gcModule', [
   'Increment',
   'Decrement',
-  'Wipe'
+  'Cleanup'
 ]);
 
 enum mutations {
   GCIncrement = 'GCIncrement',
   GCDecrement = 'GCDecrement',
-  GCClear = 'GCClear',
 }
 
 type State = {
@@ -29,8 +28,6 @@ type State = {
 const state: State = {
   gcStore: {},
 };
-
-const gcPages: GCPages = {};
 
 const gcModule = {
   namespaced: true,
@@ -54,15 +51,6 @@ const gcModule = {
     ) {
       commit(mutations.GCDecrement, { gcIndex: payload.gcIndex, delete: payload.delete });
     },
-    async [actionsInt.Wipe] (
-      { commit, state }
-    ) {
-      Object.keys(state.gcStore).forEach(key => {
-        if (state.gcStore[key].references <= 0) {
-          commit(mutations.GCClear, key)
-        }
-      })
-    }
   },
   mutations: {
     // datas collection
@@ -103,15 +91,23 @@ const gcModule = {
           delete: del
         }
       };
+
+      if (state.gcStore[index].references <= 0) {
+        state.gcStore[index].delete();
+      }
     },
-    [mutations.GCClear] (
-      state: State,
-      gcHash: string
-    ) {
-      state.gcStore[gcHash].delete()
-    }
   }
 };
+
+const gcPages: GCPages = {};
+
+const cleanup = (cId: string) => {
+  for (let f of gcPages[cId]) {
+    f();
+  }
+}
+
+
 
 export type {
   GCStore,
@@ -119,4 +115,4 @@ export type {
 
 export default gcModule;
 
-export { actionsExt as actions, gcPages };
+export { actionsExt as actions, gcPages, cleanup };

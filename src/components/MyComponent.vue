@@ -20,10 +20,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent, ref, computed, onMounted, onUnmounted } from 'vue'
 import { useStore } from 'vuex';
 import { actions as actionsData, getters as gettersData } from '@typescript-demo-spa/store/data';
-import { actions as gc } from '@typescript-demo-spa/store/gc';
+import { actions as gc, cleanup } from '@typescript-demo-spa/store/gc';
 import DataThing from './DataThing.vue';
 
 export default defineComponent({
@@ -32,6 +32,7 @@ export default defineComponent({
     DataThing,
   },
   setup(props, context) {
+    const cId = "mmmm"
     const store = useStore()
     const state = store.state
 
@@ -48,22 +49,31 @@ export default defineComponent({
       )
     })
 
+    onUnmounted(() => {
+      cleanup(cId)
+    })
+
     const dataPage = computed(() => {
-      return store.getters[gettersData.getDataPages](pageId)
+      return store.getters[gettersData.getDataPages]({pageId, cId})
     })
 
     const test = () => {
-      console.log(state.gcModule.gcStore)
+      console.log(state.data.datas)
     }
 
     const show = ref(true)
 
-    const toggle = () => {
+    const toggle = async () => {
+      if (!show.value) {
+        await store.dispatch(
+          actionsData.FetchDatasPage,
+          {
+            pageId: pageId,
+            limit: limit
+          }
+        )
+      }
       show.value = !show.value
-    }
-
-    const wipe = async () => {
-      await store.dispatch(gc.Wipe)
     }
 
     return {
@@ -71,7 +81,6 @@ export default defineComponent({
       test,
       toggle,
       show,
-      wipe
     }
   }
 
