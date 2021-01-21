@@ -13,7 +13,10 @@ declare global {
   }
 }
 
-const isNode = typeof process !== 'undefined' && process.release && process.release.name === 'node';
+const isNode =
+  typeof process !== 'undefined' &&
+  process.release &&
+  process.release.name === 'node';
 
 type Config = {
   basePath: string;
@@ -28,13 +31,15 @@ if (isNode) {
   config['basePath'] = process.env.DEMO_BASE ?? '';
   config['demoProt'] = process.env.DEMO_PROT ?? 'http';
   config['demoHost'] = process.env.DEMO_HOST ?? '127.0.0.1';
-  config['demoPort'] = process.env.DEMO_PORT != null ? parseInt(process.env.DEMO_PORT) : 80;
+  config['demoPort'] =
+    process.env.DEMO_PORT != null ? parseInt(process.env.DEMO_PORT) : 80;
   config;
 } else {
   config['basePath'] = window.config.DEMO_BASE ?? '';
   config['demoProt'] = window.config.DEMO_PROT ?? 'http';
   config['demoHost'] = window.config.DEMO_HOST ?? '127.0.0.1';
-  config['demoPort'] = window.config.DEMO_PORT != null ? parseInt(window.config.DEMO_PORT) : 80;
+  config['demoPort'] =
+    window.config.DEMO_PORT != null ? parseInt(window.config.DEMO_PORT) : 80;
 }
 
 export default config as Config;
