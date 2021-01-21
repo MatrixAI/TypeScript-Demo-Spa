@@ -30,13 +30,3 @@ nix-dry:
   script:
     - nix-build -v -v --dry-run ./release.nix --attr application
     - nix-build -v -v --dry-run ./release.nix --attr docker
-
-nix:
-  stage: build
-  script:
-    - >
-        nix-build ./release.nix
-        --attr application
-        --attr docker
-  only:
-    - master
