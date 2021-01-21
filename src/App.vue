@@ -1,28 +1,29 @@
 <template>
-  <div class=root>
-    <h1>Welcome to Typescript-Demo-Spa</h1>
+  <div>
+    <Header />
+    <p>In App Vue</p>
     <button @click="increment(1)">Clicked {{ count }} times.</button>
-    <div>
-      <MyComponent />
-    </div>
+    <router-view class="content" />
+    <Footer />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-import MyComponent from '@typescript-demo-spa/components/MyComponent.vue'
+import Header from "@/components/Header.vue";
+import Footer from "@/components/Footer.vue";
 
 export default defineComponent({
   components: {
-    MyComponent
+    Header,
+    Footer
   },
   setup(props, context) {
-    const count = ref(0)
-
+    console.log('Setting up Demo App');
+    const count = ref(0);
     const increment = (amount: number) => {
       count.value += amount
-    }
-
+    };
     return {
       count,
       increment
@@ -32,9 +33,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.root {
-  font-family: "Lucida Console", Courier, monospace;
-  font-size: 2em;
-  text-align: center;
+.content {
+  margin: 10px;
 }
 </style>

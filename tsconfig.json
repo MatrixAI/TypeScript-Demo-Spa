@@ -2,17 +2,18 @@
   "compilerOptions": {
     "outDir": "./dist",
     "sourceMap": true,
-    "strict": true,
-    "jsx": "preserve",
+    "declaration": false,
+    "strictNullChecks": true,
+    "noImplicitAny": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "module": "es6",
+    "module": "CommonJS",
     "target": "ES2016",
     "baseUrl": "./src",
     "paths": {
-      "@typescript-demo-spa": ["index"],
-      "@typescript-demo-spa/*": ["*"]
+      "@": ["index"],
+      "@/*": ["*"]
     }
   },
   "include": [
