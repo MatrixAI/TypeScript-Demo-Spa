@@ -24,9 +24,3 @@ test:
         npm install;
         npm run test;
         '
-
-nix-dry:
-  stage: check
-  script:
-    - nix-build -v -v --dry-run ./release.nix --attr application
-    - nix-build -v -v --dry-run ./release.nix --attr docker
