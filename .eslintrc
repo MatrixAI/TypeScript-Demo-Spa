@@ -24,11 +24,11 @@
     "@typescript-eslint/no-namespace": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/no-unused-vars": "error",
     "no-prototype-builtins": 1,
     "no-useless-catch": 1,
     "no-undef": 1,
     "no-empty": 1,
-    "@typescript-eslint/no-unused-vars": "error",
     "linebreak-style": ["error", "unix"]
   }
 }
