@@ -1,37 +1,14 @@
-# TypeScript-Demo-SPA
+# TypeScript-Demo-Spa
 
 [![pipeline status](https://gitlab.com/MatrixAI/open-source/TypeScript-Demo-Spa/badges/master/pipeline.svg)](https://gitlab.com/MatrixAI/open-source/TypeScript-Demo-Spa/commits/master)
 
-## Installation
-
-Note that JavaScript libraries are not packaged in Nix. Only JavaScript applications are.
-
-Building the package:
-
-```sh
-nix-build -E '(import ./pkgs.nix).callPackage ./default.nix {}'
-```
-
-Building the releases:
-
-```sh
-nix-build ./release.nix --attr application
-nix-build ./release.nix --attr docker
-```
-
-Install into Nix user profile:
-
-```sh
-nix-env -f ./release.nix --install --attr application
-```
-
-Install into Docker:
-
-```sh
-docker load --input "$(nix-build ./release.nix --attr docker)"
-```
-
 ## Development
+
+Setup the environment variables and edit them appropriately:
+
+```sh
+cp .env.example .env
+```
 
 Run `nix-shell`, and once you're inside, you can use:
 
@@ -56,33 +33,14 @@ npm run lintfix
 
 ### Path Aliases
 
-Due to https://github.com/microsoft/TypeScript/issues/10866, you cannot use path aliases without a bundler like Webpack to further transform the generated JavaScript code in order to resolve the path aliases. Because this is a simple library demonstrate, there's no need to use a bundler. In fact, for such libraries, it is far more efficient to not bundle the code.
+Due to https://github.com/microsoft/TypeScript/issues/10866, you cannot use path aliases without a bundler like Webpack to further transform the generated JavaScript code in order to resolve the path aliases. Because this is a simple library demonstration, there's no need to use a bundler. In fact, for such libraries, it is far more efficient to not bundle the code.
 
-However we have left the path alias configuration in `tsconfig.json`, `jest.config.json` and in the tests we are making use of the `@typescript-demo-lib` alias.
+However we have left the path alias configuration in `tsconfig.json`, `jest.config.js` and in the tests we are making use of the `@` alias.
 
-### Docs Generation
+## Webpack Configuration
 
-Remember to create `gh-pages` as an orphan branch first: `git checkout --orphan gh-pages`.
+The `dist/*` are the final outputs from webpack.
 
-```sh
-typedoc --mode modules --out /tmp/docs src
-git checkout gh-pages
-find . -mindepth 1 -maxdepth 1 ! -name ".git" -exec rm -r "{}" \;
-mv /tmp/docs/* .;
-touch .nojekyll
-git commit -am "Updated Docs";
-git push
-```
+There is an `dist/index.html` that is the Web entrypoint.
 
-See the docs at: https://matrixai.github.io/TypeScript-Demo-Lib/
-
-### Publishing
-
-```sh
-# npm login
-npm version patch # major/minor/patch
-npm run build
-npm publish --access public
-git push
-git push --tags
-```
+There are some image files in `dist/` that is just there for dummy data.
