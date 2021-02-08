@@ -65,7 +65,8 @@ module.exports = {
       patterns: [
         {
           from: 'assets'
-        }
+        },
+        { from: "src/images", to: "images/"}
       ]
     }),
     new HtmlWebpackPlugin({
