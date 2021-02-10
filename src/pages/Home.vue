@@ -11,7 +11,7 @@ import { useStore } from 'vuex';
 import { actions } from '@/store/comments';
 
 export default defineComponent({
-  setup(props, context) {
+  setup() {
     const store = useStore();
     onMounted(async () => {
       await store.dispatch(actions.FetchComment, { id: 1 });
@@ -20,8 +20,8 @@ export default defineComponent({
       return store.state.comments.comments[1];
     });
     return {
-      comment
+      comment,
     };
-  }
+  },
 });
 </script>

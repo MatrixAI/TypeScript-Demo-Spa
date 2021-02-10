@@ -1,13 +1,13 @@
 <template>
   <header>
     <h1>
-      <router-link to="/">TypeScript Demo SPA</router-link>
+      <router-link to="/"> TypeScript Demo SPA </router-link>
     </h1>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 export default defineComponent({});
 </script>
 
