@@ -1,5 +1,5 @@
-import { mount } from '@vue/test-utils'
-import App from "@/App.vue";
+import { mount } from '@vue/test-utils';
+import App from '@/App.vue';
 import store from '@/store';
 import router from '@/router';
 
@@ -9,8 +9,8 @@ describe('index', () => {
     await router.isReady();
     const wrapper = mount(App, {
       global: {
-        plugins: [store, router]
-      }
+        plugins: [store, router],
+      },
     });
     expect(wrapper.html()).toContain('TypeScript Demo SPA');
   });

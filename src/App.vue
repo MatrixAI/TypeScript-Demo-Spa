@@ -9,26 +9,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import Header from "@/components/Header.vue";
-import Footer from "@/components/Footer.vue";
+import { defineComponent, ref } from 'vue';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
 
 export default defineComponent({
   components: {
     Header,
-    Footer
+    Footer,
   },
-  setup(props, context) {
+  setup() {
     console.log('Setting up Demo App');
     const count = ref(0);
     const increment = (amount: number) => {
-      count.value += amount
+      count.value += amount;
     };
     return {
       count,
-      increment
-    }
-  }
+      increment,
+    };
+  },
 });
 </script>
 

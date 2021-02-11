@@ -21,8 +21,8 @@
     "build": "webpack --mode='production'",
     "ts-node": "ts-node -r tsconfig-paths/register",
     "test": "jest",
-    "lint": "eslint '{src,tests}/**/*.{js,ts}'",
-    "lintfix": "eslint '{src,tests}/**/*.{js,ts}' --fix"
+    "lint": "eslint '{src,tests}/**/*.{js,ts,vue}'",
+    "lintfix": "eslint '{src,tests}/**/*.{js,ts,vue}' --fix"
   },
   "devDependencies": {
     "@types/jest": "^26.0.20",
@@ -37,6 +37,7 @@
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.5.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.0.0-beta.6",
     "jest": "^26.6.3",
